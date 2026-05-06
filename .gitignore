@@ -1,0 +1,61 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+bin/
+*.test
+*.out
+
+# Go workspace file
+go.work
+
+# Dependency directories
+vendor/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Config files with sensitive data
+*.local.yaml
+.env
+.env.local
+
+# Logs
+*.log
+logs/
+
+# Database
+*.db
+*.sqlite
+
+# Docker
+docker-compose.override.yml
+
+# Build artifacts
+*/bin/
+*/dist/
+protoc_bin/
+protoc.zip
+.npm-cache/
+
+# Proto generated files (optional, 可以选择提交)
+# *.pb.go
+# *_grpc.pb.go
+
+# Test coverage
+coverage.out
+coverage.html
+
+# Temporary files
+tmp/
+temp/

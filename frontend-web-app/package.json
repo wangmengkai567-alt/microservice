@@ -1,0 +1,47 @@
+{
+  "name": "frontend-web-app",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "format": "prettier --write src/",
+    "test:unit": "vitest run",
+    "test:property": "vitest run --config vitest.property.config.ts",
+    "test:integration": "vitest run --config vitest.integration.config.ts"
+  },
+  "dependencies": {
+    "@headlessui/vue": "^1.7.19",
+    "@tanstack/vue-query": "^5.28.4",
+    "axios": "^1.6.7",
+    "pinia": "^2.1.7",
+    "vee-validate": "^4.12.5",
+    "vue": "^3.4.21",
+    "vue-router": "^4.3.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@iconify-json/heroicons": "^1.1.20",
+    "@typescript-eslint/eslint-plugin": "^7.2.0",
+    "@typescript-eslint/parser": "^7.2.0",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "@vitest/ui": "^1.4.0",
+    "@vue/eslint-config-typescript": "^12.0.0",
+    "@vue/test-utils": "^2.4.5",
+    "autoprefixer": "^10.4.18",
+    "eslint": "^8.57.0",
+    "eslint-plugin-vue": "^9.22.0",
+    "fast-check": "^3.17.1",
+    "jsdom": "^24.0.0",
+    "postcss": "^8.4.35",
+    "prettier": "^3.2.5",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.4.2",
+    "unplugin-icons": "^0.18.5",
+    "vite": "^5.1.6",
+    "vitest": "^1.4.0",
+    "vue-tsc": "^2.0.6"
+  }
+}

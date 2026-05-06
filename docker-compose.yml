@@ -1,0 +1,156 @@
+services:
+  # MySQL 数据库
+  mysql:
+    image: mysql:8.0
+    container_name: microservice-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: user_service
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - microservice-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # RabbitMQ 消息队列
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: microservice-rabbitmq
+    ports:
+      - "5672:5672" # AMQP 协议端口
+      - "15672:15672" # 管理界面端口
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin123
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - microservice-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # User Service
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    container_name: user-service
+    ports:
+      - "9081:8081"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=123456
+      - DB_NAME=user_service
+    networks:
+      - microservice-network
+    restart: on-failure
+
+  # Product Service
+  product-service:
+    build:
+      context: ./product-service
+      dockerfile: Dockerfile
+    container_name: product-service
+    ports:
+      - "9082:8082"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=123456
+      - DB_NAME=product_service
+    networks:
+      - microservice-network
+    restart: on-failure
+
+  # Order Service
+  order-service:
+    build:
+      context: ./order-service
+      dockerfile: Dockerfile
+    container_name: order-service
+    ports:
+      - "9083:8083"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      user-service:
+        condition: service_started
+      product-service:
+        condition: service_started
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=123456
+      - DB_NAME=order_service
+      - USER_SERVICE=user-service:8081
+      - PRODUCT_SERVICE=product-service:8082
+      - RABBITMQ_URL=amqp://admin:admin123@rabbitmq:5672/
+    networks:
+      - microservice-network
+    restart: on-failure
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: ./api_gateway
+      dockerfile: Dockerfile
+    container_name: api-gateway
+    ports:
+      - "9080:8080"
+    depends_on:
+      - user-service
+      - product-service
+      - order-service
+    environment:
+      - USER_SERVICE=user-service:8081
+      - PRODUCT_SERVICE=product-service:8082
+      - ORDER_SERVICE=order-service:8083
+    networks:
+      - microservice-network
+    restart: on-failure
+
+  # Dozzle - Docker 日志查看器
+  dozzle:
+    image: amir20/dozzle:v8.7.1
+    container_name: dozzle
+    ports:
+      - "9999:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - DOZZLE_LEVEL=info
+      - DOZZLE_TAILSIZE=300
+      - DOZZLE_FILTER=status=running
+    networks:
+      - microservice-network
+    restart: unless-stopped
+
+networks:
+  microservice-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  rabbitmq_data:

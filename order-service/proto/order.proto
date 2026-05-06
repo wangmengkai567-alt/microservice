@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+package order;
+
+option go_package = "order-service/proto";
+
+service OrderService {
+  rpc CreateOrder (CreateOrderRequest) returns (CreateOrderResponse);
+  rpc GetOrder (GetOrderRequest) returns (GetOrderResponse);
+  rpc ListOrders (ListOrdersRequest) returns (ListOrdersResponse);
+  rpc CancelOrder (CancelOrderRequest) returns (CancelOrderResponse);
+  rpc DeleteOrder (DeleteOrderRequest) returns (DeleteOrderResponse);
+  rpc PayOrder (PayOrderRequest) returns (PayOrderResponse);
+}
+
+message CreateOrderRequest {
+  uint32 product_id = 1;
+  int32 quantity = 2;
+}
+
+message CreateOrderResponse {
+  uint32 id = 1;
+  string order_no = 2;
+  string message = 3;
+}
+
+message GetOrderRequest {
+  uint32 id = 1;
+}
+
+message GetOrderResponse {
+  uint32 id = 1;
+  string order_no = 2;
+  uint32 user_id = 3;
+  uint32 product_id = 4;
+  string product_name = 5;
+  int32 quantity = 6;
+  double total_price = 7;
+  string status = 8;
+  string created_at = 9;
+  string updated_at = 10;
+}
+
+message ListOrdersRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+}
+
+message ListOrdersResponse {
+  repeated Order orders = 1;
+  int32 total = 2;
+}
+
+message Order {
+  uint32 id = 1;
+  string order_no = 2;
+  uint32 user_id = 3;
+  uint32 product_id = 4;
+  string product_name = 5;
+  int32 quantity = 6;
+  double total_price = 7;
+  string status = 8;
+  string created_at = 9;
+  string updated_at = 10;
+}
+
+message CancelOrderRequest {
+  uint32 id = 1;
+}
+
+message CancelOrderResponse {
+  string message = 1;
+}
+
+message DeleteOrderRequest {
+  uint32 id = 1;
+}
+
+message DeleteOrderResponse {
+  string message = 1;
+}
+
+message PayOrderRequest {
+  uint32 id = 1;
+}
+
+message PayOrderResponse {
+  string message = 1;
+}

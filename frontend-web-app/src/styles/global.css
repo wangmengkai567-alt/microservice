@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 全局样式 */
+:root {
+  --color-primary: #3b82f6;
+  --color-success: #10b981;
+  --color-error: #ef4444;
+  --color-warning: #f59e0b;
+}
+
+/* 确保焦点状态清晰可见 */
+*:focus-visible {
+  @apply outline-2 outline-offset-2 outline-primary-500;
+}
+
+/* 确保文本和背景对比度符合WCAG AA标准 */
+body {
+  @apply text-gray-900 bg-white;
+}
+
+/* 平滑滚动 */
+html {
+  scroll-behavior: smooth;
+}
+
+/* 禁用文本选择时的蓝色高亮（在某些交互元素上） */
+button,
+[role='button'] {
+  -webkit-tap-highlight-color: transparent;
+}
