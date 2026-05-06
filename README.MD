@@ -268,17 +268,3 @@ protoc --go_out=. --go-grpc_out=. proto/*.proto
 ### Q: 如何调试服务？
 
 使用 grpcurl 或 BloomRPC 测试 gRPC 接口。
-
-## 贡献指南
-
-欢迎提交 Issue 和 Pull Request！
-
-## 许可证
-
-MIT License
-
-针对proto: ubuntu
-cd /mnt/e/go/微服务/product-service/proto
-protoc --go_out=. --go_opt=paths=source_relative \product.proto
-protoc --go-grpc_out=. --go-grpc_opt=paths=source_relative \
- product.proto
